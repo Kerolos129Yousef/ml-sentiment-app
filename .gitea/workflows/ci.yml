@@ -1,43 +1,37 @@
-# CI Pipeline for ml-sentiment-app
-# Gitea Actions uses the same syntax as GitHub Actions.
-# Documentation: https://docs.gitea.com/usage/actions/overview
-#
-# TODO: Define the trigger (on push/PR to main)
-# TODO: Define jobs for: lint, type-check, test, build-and-push, sbom
-#
-# Hints:
-#   - Use actions/checkout@v4 and actions/setup-python@v5
-#   - The CI runner has Docker available (via socket mount)
-#   - For the registry address, see the infrastructure table in the assignment README
-
 name: CI Pipeline
 
 on:
   push:
-    branches: main
-    tags:'v*'
+    branches:
+      - main
+    tags:
+      - 'v*'
   pull_request:
-    branches: main
+    branches:
+      - main
 
 env:
   REGISTRY: localhost:5001
   IMAGE_NAME: ml-sentiment-app
 
 jobs:
-  lint:
+  health-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version:'3.11'
+          python-version: '3.11'
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           python -m textblob.download_corpora
+
       - name: Start app and check health
         run: |
           uvicorn src.inference:app --host 0.0.0.0 --port 8000 &
           sleep 3
-          curl -f http://loccalhost:8000/health
+          curl -f http://localhost:8000/health
           kill %1
