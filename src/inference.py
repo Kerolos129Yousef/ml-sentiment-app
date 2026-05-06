@@ -19,13 +19,18 @@ class PredictResponse(BaseModel):
 
 
 @app.get("/health")
-def health():
+def health() -> dict[str, str]:
     return {"status": "healthy"}
 
 
 @app.post("/predict", response_model=PredictResponse)
-def predict(request: PredictRequest):
+def predict(request: PredictRequest) -> PredictResponse:
     if not validate_input(request.text):
         raise HTTPException(status_code=400, detail="Invalid input text")
+
     result = predict_sentiment(request.text)
-    return PredictResponse(label=result["label"], confidence=result["confidence"])
+
+    return PredictResponse(
+        label=result["label"],
+        confidence=result["confidence"]
+    )
