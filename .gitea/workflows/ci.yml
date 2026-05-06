@@ -1,0 +1,29 @@
+# CI Pipeline for ml-sentiment-app
+# Gitea Actions uses the same syntax as GitHub Actions.
+# Documentation: https://docs.gitea.com/usage/actions/overview
+#
+# TODO: Define the trigger (on push/PR to main)
+# TODO: Define jobs for: lint, type-check, test, build-and-push, sbom
+#
+# Hints:
+#   - Use actions/checkout@v4 and actions/setup-python@v5
+#   - The CI runner has Docker available (via socket mount)
+#   - For the registry address, see the infrastructure table in the assignment README
+
+name: CI Pipeline
+
+on:
+  # TODO: trigger on push and pull_request to main
+
+env:
+  REGISTRY: # TODO: set the registry address (see infrastructure table)
+  IMAGE_NAME: ml-sentiment-app
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: setup python, install dependencies, run ruff
+
+  # TODO: add type-check, test, build-and-push, sbom jobs

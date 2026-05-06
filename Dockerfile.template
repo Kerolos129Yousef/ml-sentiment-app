@@ -1,0 +1,23 @@
+# TODO: Complete this Dockerfile
+# Requirements:
+#   1. Use a multi-stage build (builder + runtime stages)
+#   2. Use python:3.11-slim as the base image
+#   3. Use specific version tags (e.g., python:3.11-slim) for reproducibility
+#   4. Run the application as a non-root user
+#   5. Install only production dependencies (no dev tools)
+#   6. Expose port 8000
+#   7. Use uvicorn to run the FastAPI app
+
+# --- Stage 1: Builder ---
+# TODO: Define the builder stage
+# - Install dependencies into a virtual environment or use pip install --prefix
+
+# --- Stage 2: Runtime ---
+# TODO: Define the runtime stage
+# - Copy only the necessary files from the builder
+# - Don't forget: TextBlob requires corpus data downloaded at build time
+#   (python -m textblob.download_corpora)
+# - Create a non-root user
+# - Set the working directory
+# - Expose the correct port
+# - Define the CMD to start uvicorn
