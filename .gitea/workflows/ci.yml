@@ -17,31 +17,64 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
-       - name: Checkout code
-         uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
-       - name: Set up Python
-         uses: actions/setup-python@v5
-         with: 
-           python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: 
+          python-version: '3.11'
         
-       - name: Install dependencies
-         run: |
+      - name: Install dependencies
+        run: |
           pip install -r requirements.txt
           python -m textblob.download_corpora
           pip install ruff
     
-       - name: create reports directory
-         run: mkdir -p reports
+      - name: Create reports directory
+        run: mkdir -p reports
 
-       - name: Run ruff linter
-         run: |
+      - name: Run ruff linter
+        run: |
           ruff check src/ tests/ | tee reports/ruff.txt
 
-       - name: Upload lint report 
-         if: always()
-         uses: actions/upload-artifact@v3
-         with: 
-           name: ci-reports-${{ gitea.run_id || github.run_id }}
-           path: reports/ruff.txt
+      - name: Upload lint report 
+        if: always()
+        uses: actions/upload-artifact@v3
+        with: 
+          name: ci-reports-${{ github.run_id }}
+          path: reports/ruff.txt
+
+  type-check:
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m textblob.download_corpora
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run mypy type checker
+        run: |
+          mypy src/ > reports/mypy.txt 2>&1 || true
+          cat reports/mypy.txt
+          mypy src/
+
+      - name: Upload mypy report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-reports-${{ github.run_id }}
+          path: reports/mypy.txt
