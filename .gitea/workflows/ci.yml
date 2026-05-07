@@ -111,3 +111,25 @@ jobs:
           path: |
             reports/pytest.txt
             reports/coverage/
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          TAG=${{ gitea.sha }}
+
+          docker build -t $IMAGE:latest -t $IMAGE:$TAG .
+
+      - name: Push Docker image
+        run: |
+          IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          TAG=${{ gitea.sha }}
+
+          docker push $IMAGE:latest
+          docker push $IMAGE:$TAG
