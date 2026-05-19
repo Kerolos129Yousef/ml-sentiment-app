@@ -3,12 +3,11 @@
 import time
 
 from fastapi import FastAPI, HTTPException, Response
-from pydantic import BaseModel
 from prometheus_client import Counter, Histogram, generate_latest
+from pydantic import BaseModel
 
 from src.model import predict_sentiment
 from src.preprocess import validate_input
-
 
 app = FastAPI(title="ML Sentiment Analyzer", version="0.1.0")
 
