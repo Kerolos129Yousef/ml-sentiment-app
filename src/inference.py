@@ -97,3 +97,4 @@ def predict(request: PredictRequest) -> PredictResponse:
 @app.get("/metrics")
 def metrics() -> Response:
     return Response(content=generate_latest(), media_type="text/plain")
+
