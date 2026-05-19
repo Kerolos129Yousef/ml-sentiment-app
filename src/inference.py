@@ -34,3 +34,43 @@ def predict(request: PredictRequest) -> PredictResponse:
         label=result["label"],
         confidence=result["confidence"]
     )
+
+from prometheus_client import Counter, Histogram, generate_latest
+from fastapi import Response
+
+# --- Prometheus metrics ---
+REQUEST_COUNT = Counter(
+    "prediction_requests_total",
+    "Total prediction requests",
+    ["method", "endpoint", "status"]
+)
+PREDICTION_LABEL_COUNT = Counter(
+    "predictions_per_label_total",
+    "Total predictions per sentiment label",
+    ["label"]
+)
+REQUEST_LATENCY = Histogram(
+    "prediction_request_duration_seconds",
+    "Prediction request latency",
+    ["method", "endpoint"]
+)
+
+@app.get("/metrics")
+def metrics() -> Response:
+    """Prometheus metrics endpoint."""
+    return Response(content=generate_latest(), media_type="text/plain")
+import time
+
+@app.post("/predict")
+def predict(request: PredictRequest) -> PredictResponse:
+    start = time.time()
+    try:
+        result = model.predict(request.text)
+        REQUEST_COUNT.labels(method="POST", endpoint="/predict", status="200").inc()
+        PREDICTION_LABEL_COUNT.labels(label=result.label).inc()
+        return result
+    except Exception as e:
+        REQUEST_COUNT.labels(method="POST", endpoint="/predict", status="500").inc()
+        raise e
+    finally:
+        REQUEST_LATENCY.labels(method="POST", endpoint="/predict").observe(time.time() - start)
