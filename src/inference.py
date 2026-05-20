@@ -99,4 +99,10 @@ def metrics() -> Response:
 
 @app.get("/error")
 def error() -> None:
-    raise Exception("demo 500 error")
+    REQUEST_COUNT.labels(
+        method="GET",
+        endpoint="/error",
+        status="500"
+    ).inc()
+
+    raise HTTPException(status_code=500, detail="Demo 500 error")
