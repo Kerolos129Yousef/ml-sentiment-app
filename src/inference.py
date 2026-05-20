@@ -106,3 +106,4 @@ def error() -> None:
     ).inc()
 
     raise HTTPException(status_code=500, detail="Demo 500 error")
+    
