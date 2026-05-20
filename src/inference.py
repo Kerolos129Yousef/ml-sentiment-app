@@ -51,7 +51,7 @@ REQUEST_LATENCY = Histogram(
 # -----------------------------
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "healthy"}
+    return {"status": "healthy-v2"}
 
 
 @app.post("/predict", response_model=PredictResponse)
