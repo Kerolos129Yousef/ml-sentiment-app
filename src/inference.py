@@ -98,5 +98,5 @@ def metrics() -> Response:
     return Response(content=generate_latest(), media_type="text/plain")
 
 @app.get("/error")
-def error():
+def error() -> None:
     raise Exception("demo 500 error")
