@@ -97,3 +97,6 @@ def predict(request: PredictRequest) -> PredictResponse:
 def metrics() -> Response:
     return Response(content=generate_latest(), media_type="text/plain")
 
+@app.get("/error")
+def error():
+    raise Exception("demo 500 error")
