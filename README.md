@@ -270,4 +270,4 @@ These metrics are scraped by Prometheus via a `ServiceMonitor` CRD defined in th
 
 ---
 
-*Part of CISC-814 Assignment 1 — see also the [GitOps repository](https://github.com/<org>/team-gitops) for Kubernetes manifests, ArgoCD configuration, and monitoring.*
+*Part of CISC-814 Assignment 1 — see also the [GitOps repository](https://github.com/Kerolos129Yousef/ml-sentiment-app-gitops) for Kubernetes manifests, ArgoCD configuration, and monitoring.*
