@@ -38,30 +38,8 @@ The produced image is consumed by the companion **GitOps repository** ([`team-gi
 
 ## Application Architecture
 
-```
-Developer
-    │
-    └─▶ git push to main
-              │
-              ▼
-    ┌─────────────────────────────────────────────────┐
-    │           Gitea Actions CI  (.gitea/workflows/ci.yml)       │
-    │                                                             │
-    │  [1] Install deps + health check                           │
-    │  [2] ruff check src/ tests/          → ruff.txt artifact   │
-    │  [3] mypy src/                        → mypy.txt artifact   │
-    │  [4] pytest --cov=src                 → coverage artifact  │
-    │  [5] docker build (multi-stage)                            │
-    │  [6] docker push → localhost:5001/ml-sentiment-app:<sha>   │
-    │  [7] syft → sbom.spdx.json            → SBOM artifact      │
-    └─────────────────────────────────────────────────┘
-              │
-              ▼
-    Local Docker Registry (localhost:5001 / registry.local:5000)
-              │
-              ▼
-    GitOps repo picks up new SHA → ArgoCD deploys to k3d
-```
+
+![Application Architecture](assets/images/Architecture.jpeg)
 
 ---
 
